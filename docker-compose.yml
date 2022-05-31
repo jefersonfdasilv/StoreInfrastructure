@@ -1,30 +1,40 @@
 version: '3.3'
 
 services:
+
+  mysqlserver:
+    image: mysql:8
+    ports:
+      - 3306:3306
+    volumes:
+      - type: bind
+        source: ./mysqlserver/data
+        target: /var/lib/mysql
+    env_file:
+      - ./mysqlserver/.env
+  
   axonserver:
     image: axoniq/axonserver
     hostname: axonserver
+    
     volumes:
-      - axonserver-data:/data
-      - axonserver-events:/eventdata
-      - axonserver-config:/config:ro
+      - type: bind
+        source: ./axonserver/data
+        target: /data
+      - type: bind
+        source: ./axonserver/events
+        target: /eventdata
+      - type: bind
+        source: ./axonserver/config
+        target: /config
+        read_only: true
+        
     ports:
       - '8024:8024'
       - '8124:8124'
       - '8224:8224'
     networks:
       - axon-network
-    volumes:
-      - type: bind
-        source: ${PWD}/axonserver/data
-        target: /data
-      - type: bind
-        source: ${PWD}/axonserver/events
-        target: /eventdata
-      - type: bind
-        source: ${PWD}/axonserver/config
-        target: /config
-        read_only: true
-
+  
 networks:
   axon-network:

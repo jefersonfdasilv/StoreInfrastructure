@@ -1,2 +1,3 @@
 axonserver/data/*
 axonserver/events/*
+mysqlserver/data/*
