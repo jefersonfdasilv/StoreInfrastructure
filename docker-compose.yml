@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  axonserver:
+    image: axoniq/axonserver
+    hostname: axonserver
+    volumes:
+      - axonserver-data:/data
+      - axonserver-events:/eventdata
+      - axonserver-config:/config:ro
+    ports:
+      - '8024:8024'
+      - '8124:8124'
+      - '8224:8224'
+    networks:
+      - axon-network
+    volumes:
+      - type: bind
+        source: ${PWD}/axonserver/data
+        target: /data
+      - type: bind
+        source: ${PWD}/axonserver/events
+        target: /eventdata
+      - type: bind
+        source: ${PWD}/axonserver/config
+        target: /config
+        read_only: true
+
+networks:
+  axon-network:
